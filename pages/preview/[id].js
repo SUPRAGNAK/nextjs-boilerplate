@@ -1,13 +1,24 @@
 export async function getServerSideProps({ query }) {
-  const html = Buffer.from(query.data || "", "base64").toString("utf-8")
+  if (!query.data) {
+    return { notFound: true };
+  }
+
+  const html = Buffer.from(query.data, "base64").toString("utf-8");
 
   return {
     props: { html }
-  }
+  };
 }
 
-export default function Preview({ html }) {
+export default function PreviewPage({ html }) {
   return (
-    <div dangerouslySetInnerHTML={{ __html: html }} />
-  )
+    <iframe
+      srcDoc={html}
+      style={{
+        width: "100%",
+        height: "100vh",
+        border: "none"
+      }}
+    />
+  );
 }
